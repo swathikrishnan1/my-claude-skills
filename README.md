@@ -25,6 +25,12 @@ Three layers:
 
 Bundles reference notes covering FlexCard → OmniScript ContextId plumbing, Apex Callable Remote Action wiring, activation gotchas, and BRE lookup-table structure.
 
+### salesforce-pss-icm
+
+Reference and demo-build guide for Salesforce Public Sector Solutions (PSS) Investigative Case Management (ICM). Covers courts, tribunals, complaint intake, case proceedings, evidence and custody chain, regulatory violations, care plans, and citizen portals on Case / PublicComplaint / CaseProceeding / CustodyItem / RegulatoryCodeViolation.
+
+Bundled reference covers the full 24-object data model, typical baseline OmniStudio inventory, DR / IP / OmniScript / FlexCard patterns specific to ICM, permission set group architecture, record types for courts vs tribunals, and OmniScript on LWR Experience Cloud gotchas.
+
 ## License
 
 MIT — see `LICENSE`.
