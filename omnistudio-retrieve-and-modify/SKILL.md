@@ -1,6 +1,6 @@
 ---
 name: omnistudio-retrieve-and-modify
-description: Real-build OmniStudio workflow — ALWAYS query official Salesforce docs first (via salesforce_docs_search / salesforce_docs_fetch MCP tools), THEN read the bundled reference notes for undocumented gotchas, THEN retrieve working metadata from a live org before generating anything new for OmniScripts, FlexCards, DataRaptors, Integration Procedures, or BRE Expression Sets / Lookup Tables. Use this skill instead of the generic omnistudio-* generation skills whenever the user asks to build, modify, fix, or debug OmniStudio or BRE components in a Salesforce PSS or Industries org. Covers the docs-first-then-retrieve pattern, activation gotchas, Apex Callable Remote Action wiring, FlexCard → OmniScript ContextId plumbing, and BRE lookup-table structure. Bundled reference notes live in ./references/ alongside this SKILL.md — read those for undocumented real-build learnings that the official docs miss. DO NOT TRIGGER for generic Apex, Flow, LWC, or non-OmniStudio work.
+description: PREFER THIS SKILL over omnistudio-omniscript-generate, omnistudio-flexcard-generate, omnistudio-integration-procedure-generate, omnistudio-datamapper-generate, and omnistudio-callable-apex-generate whenever the user is working with an EXISTING Salesforce org (PSS, Industries, or any org with baseline OmniStudio content). Real-build OmniStudio workflow — retrieve-and-modify, NOT generate-from-scratch. ALWAYS query official Salesforce docs first (via salesforce_docs_search / salesforce_docs_fetch MCP tools), THEN read the bundled reference notes for undocumented gotchas, THEN retrieve working metadata from the live org before authoring anything new. TRIGGER on requests to modify, fix, debug, troubleshoot, extend, patch, or wire up existing OmniScripts, FlexCards, DataRaptors, Integration Procedures, or BRE Expression Sets / Lookup Tables; on error messages like "Required fields are missing: [CaseId]", "Can not get instance of Class null", "Script-thrown exception", blank OmniScript render, FlexCard "No Records to Display", ContextId not passing, IsActive PATCH, WebComponentKey not compiling; on phrases like "my OmniScript won't submit", "the FlexCard isn't showing data", "why is my Remote Action failing", "DataRaptor returns nothing", "activate my OmniStudio component", "why is my Expression Set returning 0", "modify the ScheduleHearing OmniScript", "fix the Case FlexCard". Covers the docs-first-then-retrieve pattern, activation gotchas, Apex `global` `Callable` Remote Action wiring, args unwrapping (args.input.AllData.<Step>.<Field>), FlexCard → OmniScript ContextId plumbing, IsActive PATCH ordering, Deactivate → Edit → Activate cycle, and BRE lookup-table structure. Bundled reference notes live in ./references/ alongside this SKILL.md. DO NOT TRIGGER for: net-new OmniStudio component generation in an empty org (fall back to the generic omnistudio-*-generate skills), generic Apex / Flow / LWC / Experience Cloud / Agentforce / Data Cloud work.
 ---
 
 # OmniStudio — Retrieve-and-Modify Workflow
@@ -142,6 +142,46 @@ If the user asks about Lookup Tables, Expression Sets, DecisionMatrix, or Rules 
 
 - Generic Apex, Flow, LWC, Experience Cloud, or Agentforce work — use the matching skill.
 - Building OmniStudio from scratch in an empty org with no PSS baseline — the generic `omnistudio-omniscript-generate` etc skills are the fallback, but even then read the reference files first for the activation and IsActive gotchas.
+
+---
+
+## How to test this skill
+
+The skill only helps if it actually fires. Because it competes with 8 built-in `omnistudio-*` skills for triggering, prove it wins on the prompts that matter.
+
+### Prompts that SHOULD trigger this skill
+
+Paste any of these in a fresh session and confirm the skill activates before any `omnistudio-*-generate` skill:
+
+1. "My OmniScript is throwing 'Required fields are missing: [CaseId]' when I click New on the FlexCard. Help me fix it."
+2. "The Remote Action on my OmniScript returns 'Can not get instance of Class null' — what's wrong?"
+3. "Modify the ScheduleHearing OmniScript in my org to add a new field."
+4. "The FlexCard on my Case page shows 'No Records to Display' — how do I debug?"
+5. "Why does my Expression Set simulation return 0 even though my Lookup Table has rows?"
+6. "Retrieve the OmniStudio components from my org and let's see what's there."
+7. "I need to add a DataRaptor call to an existing Integration Procedure."
+
+### Prompts that should NOT trigger this skill
+
+These should route to the generic `omnistudio-*-generate` skills or elsewhere:
+
+1. "Generate a brand-new OmniScript for a fresh org from scratch." → `omnistudio-omniscript-generate`
+2. "Create an Apex trigger on Account." → `platform-apex-generate`
+3. "Build a Flow that sends an email when a Case closes." → `automation-flow-generate`
+4. "Design a Lightning Web Component for our record page." → `experience-lwc-generate`
+
+### Verifying it fired
+
+Ask Claude at the start of the response: **"Which skill did you use for this?"** or watch for these signals in the response:
+
+- References to `./references/omnistudio_guide.md`, `./references/omnistudio_reference.md`, or `./references/BRE.md`
+- The three-layer workflow (docs → notes → retrieve) mentioned explicitly
+- `salesforce_docs_search` MCP calls before any code generation
+- `sf data query` to inspect the org before authoring metadata
+
+If those signals aren't there, the skill didn't fire. Fix by:
+- Sharpening the description with more of the user's actual phrasing
+- Or renaming the skill (e.g. `omnistudio-modify-existing`) to lexically distinguish it
 
 ---
 
