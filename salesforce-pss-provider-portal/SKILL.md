@@ -12,7 +12,7 @@ description: >-
   Also TRIGGER when the user hits the specific pain points captured here —
   ProviderManagementPsl not assigned, PSL granted but object CRUD still
   missing, HealthcareProvider ProviderType / ProviderClass / Status picklist
-  values, TKProvider Type/SubType alphanumeric rejection, Callable Apex signature
+  values, OmniScript Type/SubType alphanumeric-only rejection (no underscores or spaces), Callable Apex signature
   ("global" + "System.Callable"), args nested under input.AllData.<Step>.<Field>,
   Remote Action placement at Level 0 between Steps, "Build Your Own Aura"
   template choice for OmniScript-hosting portals. Bundled reference notes cover
